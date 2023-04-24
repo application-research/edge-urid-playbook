@@ -1,6 +1,6 @@
 ---
-- name: Restart Delta
+- name: Restart Edge
   ansible.builtin.systemd:
-    name: delta
+    name: edge
     state: restarted
     daemon_reload: true

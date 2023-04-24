@@ -53,7 +53,7 @@
 
 - name: Check out Edge
   ansible.builtin.git:
-    repo: https://github.com/application-research/edge.git
+    repo: https://github.com/application-research/edge-ur.git
     dest: "{{ compile_dir }}"
     version: "{{ edge_version }}"
     force: true
