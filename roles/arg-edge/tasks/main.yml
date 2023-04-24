@@ -1,0 +1,110 @@
+---
+- name: Install a build toolchain and dependencies
+  ansible.builtin.package:
+    name:
+      - git
+      - make
+      - build-essential
+      - wget
+      - jq
+      - hwloc
+      - ocl-icd-opencl-dev
+      - libhwloc-dev
+      - pkg-config
+    state: present
+
+- name: Install packages needed for Ansible
+  ansible.builtin.package:
+    name:
+      - acl
+    state: present
+
+- name: Ensure compile directory exists
+  ansible.builtin.file:
+    path: "{{ compile_dir }}"
+    state: directory
+    owner: "{{ edge_system_user | default('edge') }}"
+    group: "{{ edge_system_group | default('edge') }}"
+    mode: '0755'
+
+- name: Ensure Edge data directory exists
+  ansible.builtin.file:
+    path: "{{ edge_main_dir }}"
+    state: directory
+    owner: "{{ edge_system_user | default('edge') }}"
+    group: "{{ edge_system_group | default('edge') }}"
+    mode: '0755'
+
+- name: Ensure Edge blockstore directory exists
+  ansible.builtin.file:
+    path: "{{ edge_blockstore_dir }}"
+    state: directory
+    owner: "{{ edge_system_user | default('edge') }}"
+    group: "{{ edge_system_group | default('edge') }}"
+    mode: '0755'
+
+- name: Ensure Edge main directory exists
+  ansible.builtin.file:
+    path: "{{ edge_main_dir }}/edge"
+    state: directory
+    owner: "{{ edge_system_user | default('edge') }}"
+    group: "{{ edge_system_group | default('edge') }}"
+    mode: '0755'
+
+- name: Check out Edge
+  ansible.builtin.git:
+    repo: https://github.com/application-research/edge.git
+    dest: "{{ compile_dir }}"
+    version: "{{ edge_version }}"
+    force: true
+    update: true
+  become_user: "{{ edge_system_user | default('edge') }}"
+
+- name: Build Edge  # noqa 301
+  ansible.builtin.shell:
+    chdir: "{{ compile_dir }}"
+    cmd: ". /etc/profile.d/golang.sh && make all"
+    creates: "{{ compile_dir }}/edge"
+  become_user: "{{ edge_system_user | default('edge') }}"
+  notify: Restart edge
+
+- name: Install Edge
+  ansible.builtin.copy:
+    src: "{{ compile_dir }}/edge"
+    dest: "{{ binary_install_dir }}/edge"
+    owner: "{{ edge_system_user | default('edge') }}"
+    group: "{{ edge_system_group | default('edge') }}"
+    mode: '0755'
+    remote_src: true
+
+- name: Install Edge systemd service from template
+  ansible.builtin.template:
+    src: edge.service.j2
+    dest: /etc/systemd/system/edge.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Configure Edge
+  ansible.builtin.template:
+    src: edge.cfg.j2
+    dest: /etc/default/edge
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart edge
+
+- name: Install .env file
+  ansible.builtin.template:
+    src: .env.j2
+    dest: "{{ edge_main_dir }}/edge/.env"
+    owner: "{{ edge_system_user | default('edge') }}"
+    group: "{{ edge_system_group | default('edge') }}"
+    mode: '0644'
+
+- name: Enable and start edge systemd service
+  ansible.builtin.systemd:
+    name: edge
+    state: started
+    enabled: true
+    daemon_reload: true
