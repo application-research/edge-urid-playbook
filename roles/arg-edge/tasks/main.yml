@@ -85,15 +85,6 @@
     group: root
     mode: '0644'
 
-- name: Configure Edge
-  ansible.builtin.template:
-    src: edge.cfg.j2
-    dest: /etc/default/edge
-    owner: root
-    group: root
-    mode: '0644'
-  notify: Restart Edge
-
 - name: Install .env file
   ansible.builtin.template:
     src: .env.j2
