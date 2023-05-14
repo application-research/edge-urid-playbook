@@ -93,6 +93,14 @@
     group: "{{ edge_system_group | default('edge') }}"
     mode: '0644'
 
+- name: Install Edge templates
+  ansible.builtin.copy:
+    src: "{{ compile_dir }}/templates/"
+    dest: "{{ edge_main_dir }}/edge/templates/"
+    owner: root
+    group: root
+    remote_src: yes
+
 - name: Enable and start edge systemd service
   ansible.builtin.systemd:
     name: edge
