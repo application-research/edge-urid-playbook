@@ -59,6 +59,14 @@
     force: true
     update: true
   become_user: "{{ edge_system_user | default('edge') }}"
+  register: edge_checkout
+
+- name: If Edge git repository changed, run make clean
+  ansible.builtin.shell:
+    chdir: "{{ compile_dir }}"
+    cmd: ". /etc/profile.d/golang.sh && make clean"
+  become_user: "{{ edge_system_user | default('edge') }}"
+  when: edge_checkout.changed
 
 - name: Build Edge  # noqa 301
   ansible.builtin.shell:
@@ -66,7 +74,6 @@
     cmd: ". /etc/profile.d/golang.sh && make all"
     creates: "{{ compile_dir }}/edge"
   become_user: "{{ edge_system_user | default('edge') }}"
-  notify: Restart Edge
 
 - name: Install Edge
   ansible.builtin.copy:
@@ -76,6 +83,7 @@
     group: "{{ edge_system_group | default('edge') }}"
     mode: '0755'
     remote_src: true
+  notify: Restart Edge
 
 - name: Install Edge systemd service from template
   ansible.builtin.template:
