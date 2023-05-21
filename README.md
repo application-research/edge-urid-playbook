@@ -1,11 +1,11 @@
-# delta-playbook
-Ansible tooling for automatically deploying Delta to infrastructure of your choice (thanks for using Delta!)
+# edge-playbook
+Ansible tooling for automatically deploying Edge to infrastructure of your choice (thanks for using Edge!)
 
 ## Getting started
 
 * Check out this repo after making sure you've installed Ansible 2.12+
 
-`git clone https://github.com/application-research/delta-ansible-deploy`
+`git clone https://github.com/application-research/edge-playbook`
 
 * Edit the default inventory file (`inventories/dev`) and list one or more machines you want to deploy to
 
