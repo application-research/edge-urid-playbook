@@ -9,6 +9,10 @@ Ansible tooling for automatically deploying Edge to infrastructure of your choic
 
 * Edit the default inventory file (`inventories/dev`) and list one or more machines you want to deploy to
 
+* Set the `edge_version` variable in `group_vars/all.yml` to the version of Edge you want to deploy
+
+* Set the `edge_admin_api_key` variable in `group_vars/all.yml` to the admin API key you want to use
+
 * Install dependencies
 
 `ansible-galaxy install -r requirements.yml`
