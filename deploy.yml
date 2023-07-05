@@ -1,6 +1,6 @@
 ---
 - name: Compile and deploy Edge
-  hosts: edge_node
+  hosts: edge_urid_node
   become: true
 
   # We setup the edge user outside of the role because otherwise things like Rust and Go installation may fail.
