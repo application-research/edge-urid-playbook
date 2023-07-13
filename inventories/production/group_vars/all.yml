@@ -1,0 +1,17 @@
+
+edge_main_dir: "/opt/edge"
+compile_dir: "/usr/local/src/edge"
+edge_binary_install_dir: "/usr/local/bin"
+edge_blockstore_dir: "/mnt/mfs/services/whypfs/edge-urid/blocks"
+edge_system_user: "estuary"
+edge_system_group: "estuary"
+edge_version: "main"
+edge_admin_api_key: "REDACTED"
+
+# env file stuff
+edge_node_name: "ehi-edge-urid"
+edge_description: "edge-urid running on Estuary Hosted Infrastructure."
+delta_node_api: "https://delta.estuary.tech"
+edge_shared_repo: "/mnt/mfs/services/whypfs/edge-urid"
+edge_database_name: "edgeurid"
+postgres_connection_string: "postgres://edge:REDACTED@postgres-ehi.estuary.tech:52432/edgeurid-db"

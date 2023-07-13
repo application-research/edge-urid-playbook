@@ -77,8 +77,8 @@
 
 - name: Install Edge
   ansible.builtin.copy:
-    src: "{{ compile_dir }}/edge"
-    dest: "{{ edge_binary_install_dir }}/edge"
+    src: "{{ compile_dir }}/edgeurid"
+    dest: "{{ edge_binary_install_dir }}/edgeurid"
     owner: "{{ edge_system_user | default('edge') }}"
     group: "{{ edge_system_group | default('edge') }}"
     mode: '0755'
