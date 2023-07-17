@@ -6,6 +6,7 @@ EnvironmentFile={{ edge_main_dir }}/edge/.env
 WorkingDirectory={{ edge_main_dir}}/edge
 ExecStart={{ edge_binary_install_dir }}/edgeurid daemon --repo=${REPO}
 Restart=on-failure
+RestartSet=5
 User=estuary
 Group=estuary
 
